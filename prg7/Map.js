@@ -59,7 +59,7 @@ export default function Map({ route, navigation}) {
 
 
     const getMarkers =   () => {
-      fetch('https://stud.hosted.hr.nl/1036029/PRG7/hotspots.json').then((response) => response.json()).then((json) => { setMarkers(json);  }).catch((error) => console.error(error));
+      fetch('https://stud.hosted.hr.nl/1036029/PRG7/hotspots.json').then((response) => response.json()).then((json) => { setMarkers(json.hotspots);  }).catch((error) => console.error(error));
     }
   
     let text = 'Waiting..';

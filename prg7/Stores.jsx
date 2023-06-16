@@ -8,8 +8,10 @@ import StoreItem  from './StoreItem';
 export default function Stores({ navigation }) {
     const [stores, setStores] = useState([]);
 
+    
+
     const getMarkers =  () => {
-        fetch('https://stud.hosted.hr.nl/1036029/PRG7/hotspots.json').then((response) => response.json()).then((json) => { setStores(json); console.log(json); }).catch((error) => console.error(error));
+        fetch('https://stud.hosted.hr.nl/1036029/PRG7/hotspots.json').then((response) => response.json()).then((json) => { setStores(json.hotspots) }).catch((error) => console.error(error));
       }
 
       useEffect(() => {

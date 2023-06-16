@@ -83,6 +83,9 @@ export default function App() {
             <Stack.Screen
             name="MapStack"
             component={Map}
+            options={{ 
+              headerTitle: 'Map'
+            }}
           />
         </Stack.Navigator>
       </NavigationContainer>
