@@ -1,39 +1,74 @@
 import { useState, useEffect, useRef, createRef } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Pressable } from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
 import * as Location from 'expo-location';
 import { useColorScheme } from 'nativewind';
+import { Button } from 'react-native';
+import { Text } from 'react-native';
 
 
  
 
 export default function Map({ route, navigation}) {
-  let store  = null;
-   if (route.params?.store) { store = route.params.store; console.log(store); }
+  const mapRef = useRef(null);
   
-    const mapRef = createRef();
+  useEffect(() => {
+    // subscribe to unfocus event
+
+    const unsubscribe = navigation.addListener('blur', () => {
+      navigation.setParams({ store: null });
+      navigation.setOptions({ headerLeft: null });
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+   
+  
+
+
+   useEffect(() => {
+      if (!route.params?.store) return 
+
+       mapRef.current.animateToRegion({
+        latitude: route.params.store.latitude,
+        longitude: route.params.store.longitude,
+        latitudeDelta: 0.0002,
+        longitudeDelta: 0.0021,
+      }, 1000);
+
+      navigation.setOptions({
+        headerLeft: () => (
+          <Pressable
+          className="ml-5 text-black"
+          onPress={() => navigation.navigate("Store", { store: route.params.store })}
+        >
+          <Text>{'<'} Terug</Text>
+        </Pressable>
+        ),
+      });
+
+     
+
+
+  }, [route.params?.store]);
+
+ 
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
     const { colorScheme  } = useColorScheme();
-    const [initRegion, setInitRegion] = useState(
+    const [region, setRegion] = useState(
       {
-        latitude: 51.9225,
-        longitude: 4.47917,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
+        latitude:  51.924420,
+        longitude: 4.477733,
+        latitudeDelta: 0.0222,
+        longitudeDelta: 0.0321,
       }
     );
 
     const [markers, setMarkers] = useState([]);
   
-    useEffect(() => {
-      console.log(location);
-    }, []);
-
-
-    
-
-
+   
+  
     useEffect(() => {
       (async () => {
         
@@ -53,8 +88,29 @@ export default function Map({ route, navigation}) {
 
      
     }, []);
+  
+ 
+ 
+    useEffect(() => {
+      // listen to tab touch event
+      const unsubscribe = navigation.addListener("tabPress", (e) => {
+        // check if current screen is focused, if not return
+        if (!navigation.isFocused()) return;
+  
+        // scroll to top
+        mapRef.current.animateToRegion({
+          latitude: region.latitude,
+          longitude: region.longitude,
+          latitudeDelta: 0.0222,
+          longitudeDelta: 0.0321,
 
-   
+        }, 1000);
+
+      });
+  
+      return unsubscribe;
+    }, [navigation]);
+  
  
 
 
@@ -71,22 +127,12 @@ export default function Map({ route, navigation}) {
     }
     return (
         <View style={styles.container}>
-        <MapView style={styles.map}
-        ref={mapRef}
-          initialRegion={initRegion}
+        <MapView style={styles.map} 
+          ref={mapRef}
+          initialRegion={region} 
           userInterfaceStyle={colorScheme}
           showsUserLocation={true}
-           onMapReady={() => { 
-            if (store) {
-              mapRef.current.animateToRegion({
-                latitude: store.latitude,
-                longitude: store.longitude,
-                latitudeDelta: 0.0012,
-                longitudeDelta: 0.0021,
-              }, 1000);
-            }
-           } }
-        
+          
           >
             {markers.map((marker, index) => (
                 <Marker

@@ -1,6 +1,7 @@
-import { StatusBar  } from "react-native";
+import { BackHandler, Button, StatusBar  } from "react-native";
 import Counter from "./Counter";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
+
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Map from "./Map";
@@ -11,8 +12,7 @@ import Store from "./Store";
 import { createContext, useState , useEffect } from "react";
 import { useColorScheme } from "nativewind";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-
+ 
 export const themeContext = createContext('light');
 
 const Tab = createBottomTabNavigator();
@@ -30,13 +30,15 @@ function Home() {
       <Tab.Screen name="Map" component={Map} options={{
          tabBarIcon: ({ color }) => (
           <MaterialIcons name="map" color={color} size={26} />
-        ),
-      }}  />
+        ), 
+      }}  
+      />
            <Tab.Screen name="Feed" component={Counter} options={{
          tabBarIcon: ({ color }) => (
           <MaterialIcons name="favorite-outline" color={color} size={26} />
-        ),
-      }} />
+        ), 
+      }} 
+      />
       <Tab.Screen name="Settings" component={Settings} options={{
          tabBarIcon: ({ color }) => (
           <MaterialIcons name="settings" color={color} size={26} />
@@ -46,29 +48,41 @@ function Home() {
     
   );
 }
+ 
+ 
 
 export default function App() {
   const [theme, setTheme] = useState('hello');
-  const { setColorScheme } = useColorScheme();
-       
+  const { setColorScheme, colorScheme, } = useColorScheme();
+
   useEffect(() => {
-    const getTheme = async () => {
-        try {
-            const value = await AsyncStorage.getItem('theme')
-            if(value !== null) {
-                setColorScheme(value);
-            }
-        } catch(e) {
-            // error reading value
+    (async () => {
+      try { 
+        const value = await AsyncStorage.getItem('theme');
+        console.log(value);
+        if (value !== null) {
+          setColorScheme(value);
         }
-    }
-    getTheme();
-}, []);
+      } catch (e) {
+        console.log(e);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        await AsyncStorage.setItem('theme',  colorScheme);
+      } catch (e) {
+        console.log(e);
+      }
+    })();
+  }, [colorScheme]);
 
   return (
     <>
      <themeContext.Provider value={{ theme, setTheme }}>
-      <NavigationContainer>
+      <NavigationContainer theme={colorScheme == 'dark' ? DarkTheme : DefaultTheme} >
         <Stack.Navigator>
         <Stack.Screen
           name="Home"
@@ -77,20 +91,23 @@ export default function App() {
         /> 
         <Stack.Screen
             name="Store"
-            component={Store} 
-            initialParams={{ id: 'test' }}
+            component={Store}  
+            options={({ route }) => ({ title: route.params.store.title })}
+
+
+         
             />
-            <Stack.Screen
+            {/* <Stack.Screen
             name="MapStack"
             component={Map}
             options={{ 
               headerTitle: 'Map'
             }}
-          />
+          /> */}
         </Stack.Navigator>
       </NavigationContainer>
       </themeContext.Provider>
-      <StatusBar style="auto" />
+      <StatusBar barStyle={ colorScheme === 'dark' ? 'light-content' : 'dark-content'} /> 
     </>
   );
 }

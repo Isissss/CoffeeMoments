@@ -1,6 +1,5 @@
 import { Text, View, Pressable, Alert } from "react-native";
 import { useEffect, useState } from "react";
-import { twJoin } from "tailwind-merge";
 import { FontAwesome } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -79,17 +78,15 @@ export default function StoreItem({ store, navigation }) {
 
   return (
     <Pressable
-      className="p-4 bg-gray-200 m-3 rounded-b-md border-b-2 border-b-pink-600 space-y-3 active:bg-gray-300"
+      className="p-4 bg-gray-200  m-3 rounded-b-md border-b-2 border-b-pink-600 space-y-3  active:bg-gray-300"
       onPress={() =>
         navigation.navigate("Store", {
           store: store,
         })
       }
     >
-      <Text className={twJoin("font-bold", favorite ?? "bg-emerald-300")}>
-        {store.title}
-      </Text>
-      <Text>{store.description}</Text>
+      <Text className="text-black "> {store.title} </Text>
+      <Text className="text-black "> {store.description} </Text>
 
       <Pressable
         onPress={() => toggleFavorite(store.id)}
