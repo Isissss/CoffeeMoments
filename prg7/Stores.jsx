@@ -11,7 +11,6 @@ import {
   View,
 } from "react-native";
 import StoreItem from "./StoreItem";
-import { useScrollToTop } from "@react-navigation/native";
 
 export default function Stores({ navigation }) {
   const [stores, setStores] = useState([]);

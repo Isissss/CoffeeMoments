@@ -5,12 +5,12 @@ import * as Location from 'expo-location';
 import { useColorScheme } from 'nativewind';
 import { Button } from 'react-native';
 import { Text } from 'react-native';
-
+import { Ionicons } from '@expo/vector-icons';
 
  
 
 export default function Map({ route, navigation}) {
-  const mapRef = useRef(null);
+  const mapRef = useRef(null); 
   
   useEffect(() => {
     // subscribe to unfocus event
@@ -39,10 +39,17 @@ export default function Map({ route, navigation}) {
       navigation.setOptions({
         headerLeft: () => (
           <Pressable
-          className="ml-5 text-black"
+          className="ml-5"
           onPress={() => navigation.navigate("Store", { store: route.params.store })}
-        >
-          <Text>{'<'} Terug</Text>
+        > 
+          <Text>
+            <Ionicons
+              name="arrow-back"
+              size={24}
+              color={colorScheme == "dark" ? "white" : "black"}
+            />
+          </Text>
+        
         </Pressable>
         ),
       });
@@ -145,6 +152,7 @@ export default function Map({ route, navigation}) {
  
           </MapView>
       </View>
+      
     );
 }
  

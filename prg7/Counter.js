@@ -40,9 +40,7 @@ export default function Counter({ navigation }) {
       }
     
     />
-    
-      <StatusBar style="auto" />
-
+     
     </View>
   );
 }
