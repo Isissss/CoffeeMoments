@@ -2,34 +2,49 @@ import { I18n } from "i18n-js";
 
 const i18n = new I18n({
   en: {
+    settings: {
+      title: "Settings",
+      languagePicker: "Pick a language",
+      themePicker: "Pick a theme",
+    },
     hello: "Hi!",
     stores: "Stores",
-    settings: "Settings",
-    languagePicker: "Pick a language",
     goToMap: "Go to map",
     feed: "Feed",
   },
   fr: {
+    settings: {
+      title: "Paramètres",
+      languagePicker: "Choisissez une langue",
+      themePicker: "Choisissez un thème",
+    },
     hello: "Bonjour!",
     stores: "Magasins",
-    settings: "Paramètres",
-    languagePicker: "Choisissez une langue",
+
     goToMap: "Aller à la carte",
     feed: "Alimentation",
   },
   es: {
+    settings: {
+      title: "Ajustes",
+      languagePicker: "Elige un idioma",
+      themePicker: "Elige un tema",
+    },
     hello: "Hola!",
     stores: "Tiendas",
-    settings: "Ajustes",
-    languagePicker: "Elige un idioma",
+
     goToMap: "Ir al mapa",
     feed: "Alimentación",
   },
   "nl-NL": {
+    settings: {
+      title: "Instellingen",
+      languagePicker: "Kies een taal",
+      themePicker: "Kies een thema",
+    },
     hello: "Hallo!",
     stores: "Winkels",
-    settings: "Instellingen",
-    languagePicker: "Kies een taal",
+
     goToMap: "Ga naar kaart",
     feed: "Voeden",
   },

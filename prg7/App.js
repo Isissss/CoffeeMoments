@@ -4,78 +4,22 @@ import {
   NavigationContainer,
   DefaultTheme,
   DarkTheme,
+  ThemeProvider,
 } from "@react-navigation/native";
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Map from "./Map";
-import { MaterialIcons } from "@expo/vector-icons";
-import Settings from "./Settings";
-import Stores from "./Stores";
 import Store from "./Store";
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useContext } from "react";
 import { useColorScheme } from "nativewind";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getLocales, getCalendars } from "expo-localization";
-import i18n, { t } from "./I18n";
+import { getLocales } from "expo-localization";
+import i18n from "./I18n";
+import Home from "./Home";
+import ThemeContextProvider from "./ThemeContext";
 
-export const languageContext = createContext("");
-
-const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-function Home() {
-  return (
-    // receive dispatch from parent
-
-    <Tab.Navigator>
-      <Tab.Screen
-        name="Stores"
-        component={Stores}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <MaterialIcons name="house" color={color} size={26} />
-          ),
-          title: t("stores"),
-        }}
-      />
-      <Tab.Screen
-        name="Map"
-        component={Map}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <MaterialIcons name="map" color={color} size={26} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Feed"
-        component={Counter}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <MaterialIcons name="favorite-outline" color={color} size={26} />
-          ),
-          title: t("feed"),
-          tabBarLabel: t("feed"),
-        }}
-      />
-      <Tab.Screen
-        name="Settings"
-        component={Settings}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <MaterialIcons name="settings" color={color} size={26} />
-          ),
-          title: t("settings"),
-          tabBarLabel: t("settings"),
-        }}
-      />
-    </Tab.Navigator>
-  );
-}
-
 export default function App() {
-  const [theme, setTheme] = useState(i18n.locale);
   const { colorScheme, setColorScheme } = useColorScheme();
   const [loading, setLoading] = useState(true);
 
@@ -103,28 +47,13 @@ export default function App() {
     })();
   }, []);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        // get theme from storage
-        const value = await AsyncStorage.getItem("theme");
-        // if it exists, set theme
-        if (value !== null) {
-          setColorScheme(value);
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    })();
-  }, []);
-
   if (loading) {
     return null;
   }
 
   return (
     <>
-      <languageContext.Provider value={{ theme, setTheme }}>
+      <ThemeContextProvider>
         <NavigationContainer
           theme={colorScheme == "dark" ? DarkTheme : DefaultTheme}
         >
@@ -151,7 +80,7 @@ export default function App() {
           /> */}
           </Stack.Navigator>
         </NavigationContainer>
-      </languageContext.Provider>
+      </ThemeContextProvider>
       <StatusBar
         barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
       />

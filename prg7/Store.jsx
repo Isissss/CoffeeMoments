@@ -14,6 +14,7 @@ import { Image } from "react-native";
 import Animated from "react-native-reanimated";
 import { LinearGradient } from "expo-linear-gradient";
 import { t } from "./I18n";
+import FavoriteButton from "./FavoriteButton";
 
 export default function Store({ route, navigation }) {
   const { store } = route.params;
@@ -55,6 +56,7 @@ export default function Store({ route, navigation }) {
           colors={["transparent", "rgba(0,0,0,0.8)"]}
           className="h-64 "
         ></LinearGradient>
+        <FavoriteButton id={store.id} classes="top-2 right-2 absolute" />
       </ImageBackground>
 
       <View className="p-4">
@@ -71,8 +73,13 @@ export default function Store({ route, navigation }) {
           {store.address}
         </Text>
 
-        <Pressable onPress={() => navigation.navigate("Map", { store: store })}>
-          <Text className="py-4 bg-violet-30 dark:bg-red-300">
+        <Text className="text-black dark:text-white">{store.description}</Text>
+
+        <Pressable
+          onPress={() => navigation.navigate("Map", { store: store })}
+          className="rounded-md mt-6 bg-[#0B421A] w-28 text-center py-4"
+        >
+          <Text className=" w-28 text-center rounded-md text-white">
             {t("goToMap")}
           </Text>
         </Pressable>
