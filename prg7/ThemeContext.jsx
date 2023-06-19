@@ -8,7 +8,7 @@ export const useTheme = () => useContext(ThemeContext);
 
 export default function ThemeContextProvider({ children }) {
   const { colorScheme, setColorScheme } = useColorScheme();
-  const [theme, setTheme] = useState("system");
+  const [theme, setTheme] = useState("light");
 
   useEffect(() => {
     (async () => {
@@ -17,9 +17,12 @@ export default function ThemeContextProvider({ children }) {
         const value = await AsyncStorage.getItem("theme");
 
         // if it exists, set theme
-        if (value !== null) {
+        if (value !== null && value !== "system") {
           setColorScheme(value);
           setTheme(value);
+        } else {
+          // otherwise, set theme to system
+          setTheme("system");
         }
       } catch (e) {
         console.log(e);

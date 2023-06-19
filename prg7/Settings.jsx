@@ -56,15 +56,13 @@ export default function Settings({ navigation }) {
         zIndexInverse={1000}
         // onOpen={() => setOpen2(false)}
         value={value}
-        style={{ backgroundColor: colorScheme == "dark" ? "#161A22" : "#fff" }}
-        textStyle={{
-          color: colorScheme == "dark" ? "#fff" : "#000",
+        style={{
+          backgroundColor: colorScheme == "dark" ? "#161A22" : "#fff",
+          borderColor: colorScheme == "dark" ? "#484E58" : "#9ca3af",
         }}
         dropDownContainerStyle={{
           backgroundColor: colorScheme == "dark" ? "#161A22" : "#fff",
-        }}
-        dropDownStyle={{
-          backgroundColor: colorScheme == "dark" ? "#161A22" : "#fff",
+          borderColor: colorScheme == "dark" ? "#484E58" : "#9ca3af",
         }}
         items={items}
         setOpen={setOpen}
