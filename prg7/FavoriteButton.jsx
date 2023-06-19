@@ -90,7 +90,7 @@ export default function FavoriteButton({ id, classes }) {
   return (
     <Animated.View
       style={[animatedStyle]}
-      className={twJoin("h-12 w-12", classes)}
+      className={twJoin("h-9 w-9", classes)}
     >
       <Pressable
         onPress={() => {
@@ -102,13 +102,13 @@ export default function FavoriteButton({ id, classes }) {
 
           toggleFavorite();
         }}
-        className="py-2 active:bg-gray-300 w-12 h-12 rounded-full bg-red-50 flex align-middle justify-center"
+        className="py-2 active:bg-gray-300 w-9 h-9 rounded-full bg-red-50 flex align-middle justify-center"
       >
         <Text className="text-center">
           {favorite ? (
-            <FontAwesome name="heart" size={18} color={"red"} />
+            <FontAwesome name="heart" size={16} color={"red"} />
           ) : (
-            <FontAwesome name="heart-o" size={18} />
+            <FontAwesome name="heart-o" size={16} />
           )}
         </Text>
       </Pressable>

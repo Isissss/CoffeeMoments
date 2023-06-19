@@ -9,10 +9,9 @@ import { t } from "./I18n";
 
 const Tab = createBottomTabNavigator();
 
-export default function Home({ route, navigation }) {
+export default function Home() {
   return (
     // receive dispatch from parent
-
     <Tab.Navigator>
       <Tab.Screen
         name="Stores"

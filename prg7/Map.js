@@ -124,6 +124,7 @@ export default function Map({ route, navigation }) {
       <MapView
         style={styles.map}
         ref={mapRef}
+        showsCompass={true}
         initialRegion={region}
         userInterfaceStyle={colorScheme}
         showsUserLocation={true}

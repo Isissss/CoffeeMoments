@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "react-native";
-import Animated from "react-native-reanimated";
+import Animated, { FadeInDown, FadeInLeft } from "react-native-reanimated";
 import { LinearGradient } from "expo-linear-gradient";
 import { t } from "./I18n";
 import FavoriteButton from "./FavoriteButton";
@@ -60,20 +60,27 @@ export default function Store({ route, navigation }) {
       </ImageBackground>
 
       <View className="p-4">
-        <Text className="text-2xl font-bold text-black dark:text-white">
+        <Animated.Text
+          entering={FadeInDown.duration(400).delay(150)}
+          className="text-2xl tracking-tight font-bold text-black dark:text-white"
+        >
           {store.title}
-        </Text>
+        </Animated.Text>
 
-        <Text className="text-gray-500 dark:text-gray-400 mb-6">
-          <Ionicons
-            name="location"
-            size={18}
-            color={colorScheme == "dark" ? "darkgray" : "gray"}
-          />
-          {store.address}
-        </Text>
+        <Animated.View entering={FadeInDown.duration(400).delay(250)}>
+          <Text className="text-gray-500 dark:text-gray-400 mb-6">
+            <Ionicons
+              name="location"
+              size={18}
+              color={colorScheme == "dark" ? "darkgray" : "gray"}
+            />
+            {store.address}
+          </Text>
 
-        <Text className="text-black dark:text-white">{store.description}</Text>
+          <Text className="text-black dark:text-white">
+            {store.description}
+          </Text>
+        </Animated.View>
 
         <Pressable
           onPress={() => navigation.navigate("Map", { store: store })}

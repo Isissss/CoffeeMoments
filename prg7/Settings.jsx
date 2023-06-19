@@ -25,15 +25,14 @@ export default function Settings({ navigation }) {
   useEffect(() => {
     i18n.locale = value;
 
-    // update all bar labels to new language
-    navigation.setParams({
-      tabBarLabel: t("settings.title"),
-    });
-
-    // also update own label + title
+    //  update own label + title
     navigation.setOptions({
       title: t("settings.title"),
       tabBarLabel: t("settings.title"),
+    });
+
+    navigation.setParams({
+      title: t("settings.title"),
     });
 
     (async () => {
@@ -89,7 +88,7 @@ export default function Settings({ navigation }) {
           )}
         </Pressable>
         <Pressable
-          className="p-5  bg-white border-gray-400 dark:border-[#484E58] dark:bg-[#161A22] border border-b-0 flex flex-row"
+          className="p-5 bg-white border-gray-400 dark:border-[#484E58] dark:bg-[#161A22] border border-b-0 flex flex-row"
           onPress={() => setTheme("dark")}
         >
           <Text className="flex-1 text-neutral-800 dark:text-neutral-200">

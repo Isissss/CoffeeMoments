@@ -60,6 +60,6 @@ i18n.availableLocales = [
   { code: "nl-NL", languageString: "Nederlands" },
 ];
 
-export const t = i18n.t.bind(i18n);
+export const t = (scope, options) => i18n.t(scope, options);
 
 export default i18n;

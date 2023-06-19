@@ -1,27 +1,51 @@
 import { StatusBar } from "react-native";
-import Counter from "./Counter";
 import {
   NavigationContainer,
   DefaultTheme,
   DarkTheme,
-  ThemeProvider,
 } from "@react-navigation/native";
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Store from "./Store";
-import { createContext, useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { useColorScheme } from "nativewind";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getLocales } from "expo-localization";
 import i18n from "./I18n";
 import Home from "./Home";
 import ThemeContextProvider from "./ThemeContext";
+import NetInfo from "@react-native-community/netinfo";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   const { colorScheme, setColorScheme } = useColorScheme();
   const [loading, setLoading] = useState(true);
+  const [stores, setStores] = useState([]);
+
+  useEffect(() => {
+    // Subscribe
+    const unsubscribe = NetInfo.addEventListener((state) => {
+      console.log("Connection type", state.type);
+      console.log("Is connected?", state.isConnected);
+    });
+
+    // Unsubscribe
+    unsubscribe();
+  }, []);
+
+  const getMarkers = () => {
+    fetch("https://stud.hosted.hr.nl/1036029/PRG7/hotspots.json")
+      .then((response) => response.json())
+      .then((json) => {
+        setStores(json.hotspots);
+      })
+      .catch((error) => console.error(error));
+  };
+
+  useEffect(() => {
+    getMarkers();
+  }, []);
 
   useEffect(() => {
     (async () => {
