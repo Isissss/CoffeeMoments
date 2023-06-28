@@ -8,53 +8,30 @@ import {
 } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DropDownPicker from "react-native-dropdown-picker";
-import i18n, { t } from "./I18n";
-import { useTheme } from "./ThemeContext";
+import i18n, { t } from "../I18n";
+import { useTheme } from "../ThemeContext";
 export default function Settings({ navigation }) {
   // console params
   const bestColor = colorScheme == "dark" ? "white" : "gray";
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(i18n.locale);
-  const { theme, setTheme, colorScheme } = useTheme();
+  const { theme, setTheme, colorScheme, language, setLanguage } = useTheme();
   const [items, setItems] = useState(
     i18n.availableLocales.map((locale) => {
       return { label: locale.languageString, value: locale.code };
     })
   );
 
-  useEffect(() => {
-    i18n.locale = value;
-
-    //  update own label + title
-    navigation.setOptions({
-      title: t("settings.title"),
-      tabBarLabel: t("settings.title"),
-    });
-
-    navigation.setParams({
-      title: t("settings.title"),
-    });
-
-    (async () => {
-      try {
-        await AsyncStorage.setItem("language", value);
-      } catch (e) {
-        console.log(e);
-      }
-    })();
-  }, [value]);
-
   return (
     <View className="p-3">
       <Text className="text-black dark:text-white mb-2">
-        {t("settings.languagePicker")}:
+        {t("settings.languagePicker", language)}:
       </Text>
       <DropDownPicker
         open={open}
         zIndex={3000}
         zIndexInverse={1000}
         // onOpen={() => setOpen2(false)}
-        value={value}
+        value={language}
         style={{
           backgroundColor: colorScheme == "dark" ? "#161A22" : "#fff",
           borderColor: colorScheme == "dark" ? "#484E58" : "#9ca3af",
@@ -65,12 +42,12 @@ export default function Settings({ navigation }) {
         }}
         items={items}
         setOpen={setOpen}
-        setValue={setValue}
+        setValue={setLanguage}
         theme={colorScheme == "dark" ? "DARK" : "LIGHT"}
       />
 
       <Text className="text-black dark:text-neutral-100 mt-10 mb-3">
-        {t("settings.themePicker")}:
+        {t("settings.themePicker", language)}:
       </Text>
 
       <View className="flex-col items-center justify-between">
@@ -105,8 +82,7 @@ export default function Settings({ navigation }) {
           onPress={() => setTheme("system")}
         >
           <Text className="flex-1 text-neutral-800 dark:text-neutral-200">
-            <MaterialCommunityIcons name="circle-half-full" size={16} />
-            System
+            <MaterialCommunityIcons name="circle-half-full" size={16} /> System
           </Text>
           {theme == "system" ? (
             <FontAwesome5 name="dot-circle" size={18} color={bestColor} />

@@ -1,33 +1,18 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  Alert,
-  Button,
-  FlatList,
-  Pressable,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import StoreItem from "./StoreItem";
+import { FlatList, SafeAreaView } from "react-native";
+import StoreItem from "../components/StoreItem";
 import DropDownPicker from "react-native-dropdown-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useTheme } from "./ThemeContext";
+import { useTheme } from "../ThemeContext";
 
 export default function Stores({ navigation }) {
+  const { colorScheme, data } = useTheme();
   const [stores, setStores] = useState([]);
-  const [filteredStores, setFilteredStores] = useState([]);
   const [favorites, setFavorites] = useState([]);
   const [shouldAnimate, setShouldAnimate] = useState(true);
   const [filter, setFilter] = useState("all"); // ["all", "favorites"]
   const [open, setOpen] = useState(false);
   const scrollRef = useRef(null);
-  const { colorScheme } = useTheme();
-
-  useEffect(() => {
-    getMarkers();
-  }, []);
 
   useEffect(() => {
     // listen to tab touch event
@@ -43,35 +28,16 @@ export default function Stores({ navigation }) {
   }, [navigation]);
 
   useEffect(() => {
-    (async () => {
-      try {
-        const favorites = await AsyncStorage.getItem("favorites");
-        if (favorites !== null) {
-          // value previously stored
-          setFavorites(JSON.parse(favorites));
-        }
-      } catch (e) {
-        console.log(e);
-        // saving error
+    // get favorites from storage
+    AsyncStorage.getItem("favorites").then((favorites) => {
+      if (favorites !== null) {
+        setFavorites(JSON.parse(favorites));
       }
-    })();
-
-    if (filter == "all" || shouldAnimate == false) return;
-    setShouldAnimate(false);
-  }, [filter]);
-
-  const getMarkers = () => {
-    fetch("https://stud.hosted.hr.nl/1036029/PRG7/hotspots.json")
-      .then((response) => response.json())
-      .then((json) => {
-        setStores(json.hotspots);
-        setFilteredStores(json.hotspots);
-      })
-      .catch((error) => console.error(error));
-  };
+    });
+  }, []);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView className="flex-1">
       <DropDownPicker
         open={open}
         // onOpen={() => setOpen2(false)}
@@ -96,8 +62,8 @@ export default function Stores({ navigation }) {
         ref={scrollRef}
         data={
           filter == "all"
-            ? stores
-            : stores.filter((store) => favorites.includes(store.id))
+            ? data
+            : data.filter((store) => favorites.includes(store.id))
         }
         renderItem={({ item, index }) => (
           <StoreItem

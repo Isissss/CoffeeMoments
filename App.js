@@ -6,33 +6,18 @@ import {
 } from "@react-navigation/native";
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Store from "./Store";
+import Store from "./src/screens/Store";
 import { useState, useEffect } from "react";
 import { useColorScheme } from "nativewind";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getLocales } from "expo-localization";
-import i18n from "./I18n";
-import Home from "./Home";
-import ThemeContextProvider from "./ThemeContext";
-import NetInfo from "@react-native-community/netinfo";
+
+import Home from "./src/Home";
+import ThemeContextProvider from "./src/ThemeContext";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const { colorScheme, setColorScheme } = useColorScheme();
-  const [loading, setLoading] = useState(true);
+  const { colorScheme } = useColorScheme();
   const [stores, setStores] = useState([]);
-
-  useEffect(() => {
-    // Subscribe
-    const unsubscribe = NetInfo.addEventListener((state) => {
-      console.log("Connection type", state.type);
-      console.log("Is connected?", state.isConnected);
-    });
-
-    // Unsubscribe
-    unsubscribe();
-  }, []);
 
   const getMarkers = () => {
     fetch("https://stud.hosted.hr.nl/1036029/PRG7/hotspots.json")
@@ -46,34 +31,6 @@ export default function App() {
   useEffect(() => {
     getMarkers();
   }, []);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const value = await AsyncStorage.getItem("language");
-
-        if (value !== null) {
-          i18n.locale = value;
-        } else {
-          const locales = getLocales();
-
-          const locale = locales[0].languageTag;
-
-          i18n.locale = locale;
-
-          await AsyncStorage.setItem("language", locale);
-        }
-      } catch (e) {
-        console.log(e);
-      }
-
-      setLoading(false);
-    })();
-  }, []);
-
-  if (loading) {
-    return null;
-  }
 
   return (
     <>

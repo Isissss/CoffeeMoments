@@ -1,14 +1,15 @@
-import { useState, useEffect, useRef, createRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { View, StyleSheet, Pressable } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { useColorScheme } from "nativewind";
-import { Button } from "react-native";
 import { Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useTheme } from "../ThemeContext";
 
 export default function Map({ route, navigation }) {
   const mapRef = useRef(null);
+  const { data } = useTheme();
 
   useEffect(() => {
     // subscribe to unfocus event
@@ -39,7 +40,9 @@ export default function Map({ route, navigation }) {
         <Pressable
           className="ml-5"
           onPress={() =>
-            navigation.navigate("Store", { store: route.params.store })
+            navigation.navigate("Store", {
+              store: route.params.store,
+            })
           }
         >
           <Text>
@@ -64,7 +67,7 @@ export default function Map({ route, navigation }) {
     longitudeDelta: 0.0321,
   });
 
-  const [markers, setMarkers] = useState([]);
+  const [markers, setMarkers] = useState(data);
 
   useEffect(() => {
     (async () => {
@@ -78,8 +81,6 @@ export default function Map({ route, navigation }) {
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
     })();
-
-    getMarkers();
   }, []);
 
   useEffect(() => {
@@ -103,22 +104,6 @@ export default function Map({ route, navigation }) {
     return unsubscribe;
   }, [navigation]);
 
-  const getMarkers = () => {
-    fetch("https://stud.hosted.hr.nl/1036029/PRG7/hotspots.json")
-      .then((response) => response.json())
-      .then((json) => {
-        setMarkers(json.hotspots);
-      })
-      .catch((error) => console.error(error));
-  };
-
-  let text = "Waiting..";
-  if (errorMsg) {
-    text = errorMsg;
-  } else if (location) {
-    text = JSON.stringify(location);
-    console.log(text);
-  }
   return (
     <View style={styles.container}>
       <MapView

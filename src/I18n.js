@@ -11,6 +11,10 @@ const i18n = new I18n({
     stores: "Stores",
     goToMap: "Go to map",
     feed: "Feed",
+    noInternet: {
+      title: "No internet!",
+      message: "Connect to the internet to view the map.",
+    },
   },
   fr: {
     settings: {
@@ -23,6 +27,10 @@ const i18n = new I18n({
 
     goToMap: "Aller à la carte",
     feed: "Alimentation",
+    noInternet: {
+      title: "Pas d'internet!",
+      message: "Connectez-vous à Internet pour voir la carte.",
+    },
   },
   es: {
     settings: {
@@ -35,6 +43,10 @@ const i18n = new I18n({
 
     goToMap: "Ir al mapa",
     feed: "Alimentación",
+    noInternet: {
+      title: "¡Sin internet!",
+      message: "Conéctese a Internet para ver el mapa.",
+    },
   },
   "nl-NL": {
     settings: {
@@ -47,6 +59,10 @@ const i18n = new I18n({
 
     goToMap: "Ga naar kaart",
     feed: "Voeden",
+    noInternet: {
+      title: "Geen internet!",
+      message: "Verbind met internet om de kaart te kunnen bekijken.",
+    },
   },
 });
 
@@ -60,6 +76,9 @@ i18n.availableLocales = [
   { code: "nl-NL", languageString: "Nederlands" },
 ];
 
-export const t = (scope, options) => i18n.t(scope, options);
+export const t = (key, language) => {
+  i18n.locale = language;
+  return i18n.t(key);
+};
 
 export default i18n;

@@ -10,6 +10,7 @@ import Animated, {
   withSequence,
 } from "react-native-reanimated";
 import { twJoin } from "tailwind-merge";
+import * as Haptics from "expo-haptics";
 
 export default function FavoriteButton({ id, classes }) {
   const [favorite, setFavorite] = useState(false);
@@ -38,6 +39,8 @@ export default function FavoriteButton({ id, classes }) {
           ])
         );
         setFavorite(false);
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       }
     } catch (e) {
       console.log(e);
@@ -55,6 +58,8 @@ export default function FavoriteButton({ id, classes }) {
           JSON.stringify([...JSON.parse(favorites), id])
         );
         setFavorite(true);
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       } else {
         await AsyncStorage.setItem("favorites", JSON.stringify([id]));
       }
@@ -88,9 +93,11 @@ export default function FavoriteButton({ id, classes }) {
   };
 
   return (
-    <Animated.View
-      style={[animatedStyle]}
-      className={twJoin("h-9 w-9", classes)}
+    <View
+      className={twJoin(
+        "h-14 w-14 rounded-full bg-neutral-100 shadow",
+        classes
+      )}
     >
       <Pressable
         onPress={() => {
@@ -102,16 +109,16 @@ export default function FavoriteButton({ id, classes }) {
 
           toggleFavorite();
         }}
-        className="py-2 active:bg-gray-300 w-9 h-9 rounded-full bg-red-50 flex align-middle justify-center"
+        className="py-2 active:bg-gray-300 w-14 h-14 rounded-full flex align-middle justify-center"
       >
-        <Text className="text-center">
+        <Animated.Text style={[animatedStyle]} className="text-center">
           {favorite ? (
-            <FontAwesome name="heart" size={16} color={"red"} />
+            <FontAwesome name="heart" size={24} color={"red"} />
           ) : (
-            <FontAwesome name="heart-o" size={16} />
+            <FontAwesome name="heart-o" size={24} />
           )}
-        </Text>
+        </Animated.Text>
       </Pressable>
-    </Animated.View>
+    </View>
   );
 }
