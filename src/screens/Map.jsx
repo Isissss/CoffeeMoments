@@ -24,14 +24,7 @@ export default function Map({ route, navigation }) {
 
   useEffect(() => {
     if (!route.params?.store) return;
-
-    setRegion({
-      latitude: route.params.store.latitude,
-      longitude: route.params.store.longitude,
-      latitudeDelta: 0.0002,
-      longitudeDelta: 0.0021,
-    });
-
+ 
     mapRef.current.animateToRegion(
       {
         latitude: route.params.store.latitude,
