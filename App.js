@@ -11,7 +11,7 @@ import { useState, useEffect } from "react";
 import { useColorScheme } from "nativewind";
 
 import Home from "./src/Home";
-import ThemeContextProvider from "./src/ThemeContext";
+import AppContextProvider from "./src/AppContext";
 
 const Stack = createNativeStackNavigator();
 
@@ -34,7 +34,7 @@ export default function App() {
 
   return (
     <>
-      <ThemeContextProvider>
+      <AppContextProvider>
         <NavigationContainer
           theme={colorScheme == "dark" ? DarkTheme : DefaultTheme}
         >
@@ -61,7 +61,7 @@ export default function App() {
           /> */}
           </Stack.Navigator>
         </NavigationContainer>
-      </ThemeContextProvider>
+      </AppContextProvider>
       <StatusBar
         barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
       />

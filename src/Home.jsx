@@ -6,14 +6,14 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import * as Haptics from "expo-haptics";
 import { t } from "./I18n";
-import { useTheme } from "./ThemeContext";
+import { useAppContext } from "./AppContext";
 
 import { Alert } from "react-native";
 
 const Tab = createBottomTabNavigator();
 
 export default function Home() {
-  const { language, setLanguage, connected } = useTheme();
+  const { language, setLanguage, connected } = useAppContext();
 
   return (
     // receive dispatch from parent
@@ -25,7 +25,7 @@ export default function Home() {
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="house" color={color} size={26} />
           ),
-          title: t("stores", language),
+          title: t("stores.title", language),
         }}
       />
       <Tab.Screen

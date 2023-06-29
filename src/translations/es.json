@@ -1,0 +1,24 @@
+{
+    "settings": {
+        "title": "Configuración",
+        "languagePicker": "Selecciona un idioma",
+        "themePicker": "Selecciona un tema",
+        "darkMode": "Modo oscuro",
+        "lightMode": "Modo claro"
+    },
+    "hello": "¡Hola!",
+    "stores": {
+        "title": "Tiendas",
+        "browseText": "Explorar tiendas",
+        "filter": {
+            "all": "Todas",
+            "favorites": "Favoritas"
+        }
+    },
+    "goToMap": "Ir al mapa",
+    "feed": "Feed",
+    "noInternet": {
+        "title": "¡Sin conexión a internet!",
+        "message": "Conéctate a internet para ver el mapa."
+    }
+}

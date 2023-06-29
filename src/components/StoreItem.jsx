@@ -15,7 +15,7 @@ export default function StoreItem({ shouldAnimate, store, navigation, index }) {
       }
     >
       <Pressable
-        className="bg-gray-200 m-3 rounded-lg space-y-3 active:bg-gray-300 relative "
+        className="bg-gray-200 my-3 rounded-lg space-y-3 active:bg-gray-300 relative mx-2"
         onPress={() =>
           navigation.navigate("Store", {
             store: store,

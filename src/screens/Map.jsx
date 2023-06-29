@@ -5,11 +5,11 @@ import * as Location from "expo-location";
 import { useColorScheme } from "nativewind";
 import { Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useTheme } from "../ThemeContext";
+import { useAppContext } from "../AppContext";
 
 export default function Map({ route, navigation }) {
   const mapRef = useRef(null);
-  const { data } = useTheme();
+  const { data } = useAppContext();
 
   useEffect(() => {
     // subscribe to unfocus event
@@ -24,6 +24,13 @@ export default function Map({ route, navigation }) {
 
   useEffect(() => {
     if (!route.params?.store) return;
+
+    setRegion({
+      latitude: route.params.store.latitude,
+      longitude: route.params.store.longitude,
+      latitudeDelta: 0.0002,
+      longitudeDelta: 0.0021,
+    });
 
     mapRef.current.animateToRegion(
       {
@@ -58,7 +65,6 @@ export default function Map({ route, navigation }) {
   }, [route.params?.store]);
 
   const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
   const { colorScheme } = useColorScheme();
   const [region, setRegion] = useState({
     latitude: 51.92442,
@@ -86,9 +92,7 @@ export default function Map({ route, navigation }) {
   useEffect(() => {
     // listen to tab touch event
     const unsubscribe = navigation.addListener("tabPress", (e) => {
-      // check if current screen is focused, if not return
       if (!navigation.isFocused()) return;
-
       // scroll to top
       mapRef.current.animateToRegion(
         {

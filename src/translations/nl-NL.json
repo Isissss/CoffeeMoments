@@ -1,0 +1,24 @@
+{
+    "settings": {
+        "title": "Instellingen",
+        "languagePicker": "Kies een taal",
+        "themePicker": "Kies een thema",
+        "darkMode": "Donkere modus",
+        "lightMode": "Lichte modus"
+    },
+    "hello": "Hallo!",
+    "stores": {
+        "title": "Winkels",
+        "browseText": "Blader door winkels",
+        "filter": {
+            "all": "Alle",
+            "favorites": "Favorieten"
+        }
+    },
+    "goToMap": "Ga naar kaart",
+    "feed": "Nieuwsfeed",
+    "noInternet": {
+        "title": "Geen internet!",
+        "message": "Verbind met internet om de kaart te bekijken."
+    }
+}

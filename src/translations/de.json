@@ -1,0 +1,24 @@
+{
+    "settings": {
+        "title": "Einstellungen",
+        "languagePicker": "Sprache auswählen",
+        "themePicker": "Design auswählen",
+        "darkMode": "Dunkler Modus",
+        "lightMode": "Heller Modus"
+    },
+    "hello": "Hallo!",
+    "stores": {
+        "title": "Geschäfte",
+        "browseText": "Geschäfte durchsuchen",
+        "filter": {
+            "all": "Alle",
+            "favorites": "Favoriten"
+        }
+    },
+    "goToMap": "Zur Karte gehen",
+    "feed": "Feed",
+    "noInternet": {
+        "title": "Kein Internet!",
+        "message": "Verbinden Sie sich mit dem Internet, um die Karte anzuzeigen."
+    }
+}

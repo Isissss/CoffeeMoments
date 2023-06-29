@@ -9,17 +9,16 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DropDownPicker from "react-native-dropdown-picker";
 import i18n, { t } from "../I18n";
-import { useTheme } from "../ThemeContext";
+import { useAppContext } from "../AppContext";
 export default function Settings({ navigation }) {
   // console params
   const bestColor = colorScheme == "dark" ? "white" : "gray";
   const [open, setOpen] = useState(false);
-  const { theme, setTheme, colorScheme, language, setLanguage } = useTheme();
-  const [items, setItems] = useState(
-    i18n.availableLocales.map((locale) => {
-      return { label: locale.languageString, value: locale.code };
-    })
-  );
+  const { theme, setTheme, colorScheme, language, setLanguage } =
+    useAppContext();
+  const items = i18n.availableLocales.map((locale) => {
+    return { label: locale.languageString, value: locale.code };
+  });
 
   return (
     <View className="p-3">
@@ -29,6 +28,8 @@ export default function Settings({ navigation }) {
       <DropDownPicker
         open={open}
         zIndex={3000}
+        modalAnimationType="fade"
+        listMode="MODAL"
         zIndexInverse={1000}
         // onOpen={() => setOpen2(false)}
         value={language}
@@ -56,7 +57,8 @@ export default function Settings({ navigation }) {
           onPress={() => setTheme("light")}
         >
           <Text className="flex-1 text-neutral-800 dark:text-neutral-200">
-            <Ionicons name="ios-sunny" size={16} /> Light
+            <Ionicons name="ios-sunny" size={16} />{" "}
+            {t("settings.lightMode", language)}
           </Text>
           {theme == "light" ? (
             <FontAwesome5 name="dot-circle" size={18} color={bestColor} />
@@ -69,7 +71,8 @@ export default function Settings({ navigation }) {
           onPress={() => setTheme("dark")}
         >
           <Text className="flex-1 text-neutral-800 dark:text-neutral-200">
-            <Ionicons name="ios-moon" size={16} /> Dark
+            <Ionicons name="ios-moon" size={16} />{" "}
+            {t("settings.darkMode", language)}
           </Text>
           {theme == "dark" ? (
             <FontAwesome5 name="dot-circle" size={18} color={bestColor} />

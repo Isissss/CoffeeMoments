@@ -4,11 +4,11 @@ import { useColorScheme } from "nativewind";
 import NetInfo from "@react-native-community/netinfo";
 import { Alert } from "react-native";
 
-const ThemeContext = createContext();
+const AppContext = createContext();
 
-export const useTheme = () => useContext(ThemeContext);
+export const useAppContext = () => useContext(AppContext);
 
-export default function ThemeContextProvider({ children }) {
+export default function AppContextProvider({ children }) {
   const { colorScheme, setColorScheme } = useColorScheme();
   const [theme, setTheme] = useState("light");
   const [language, setLanguage] = useState("");
@@ -38,44 +38,47 @@ export default function ThemeContextProvider({ children }) {
 
       // get data from storage
       const networkInfo = await NetInfo.fetch();
-      console.log(networkInfo);
-      if (1 + 1 === 2) {
-        const response = await fetch(
-          "https://stud.hosted.hr.nl/1036029/PRG7/hotspots.json"
-        );
-        const json = await response.json();
-        setData(json.hotspots);
-
-        await AsyncStorage.setItem("data", JSON.stringify(json.hotspots));
+      if (!networkInfo.isConnected) {
+        try {
+          const response = await fetch(
+            "https://stud.hosted.hr.nl/1036029/PRG7/hotspots.json"
+          );
+          const json = await response.json();
+          await AsyncStorage.setItem("data", JSON.stringify(json.hotspots));
+          setData(json.hotspots);
+        } catch (e) {
+          // attempt to get data from storage
+          getDataFromStorage();
+        }
       } else {
+        setConnected(false);
         const savedData = await AsyncStorage.getItem("data");
         if (savedData !== null) {
           setData(JSON.parse(savedData));
         } else {
-          Alert.alert(
-            "No internet connection",
-            "Please connect to the internet to use this app",
-            [
-              {
-                text: "OK",
-              },
-            ],
-            { cancelable: false }
-          );
+          setConnected(false);
+          getDataFromStorage();
         }
       }
     })();
-
-    // Subscribe
-    const unsubscribe = NetInfo.addEventListener((state) => {
-      setConnected(state.isConnected);
-    });
-
-    // Unsubscribe
-    return unsubscribe();
   }, []);
 
+  const getDataFromStorage = async () => {
+    const savedData = await AsyncStorage.getItem("data");
+    if (savedData !== null) {
+      setData(JSON.parse(savedData));
+    } else {
+      Alert.alert(
+        "No internet connection",
+        "Please connect to the internet to use this app.",
+        [{ text: "OK" }],
+        { cancelable: false }
+      );
+    }
+  };
+
   useEffect(() => {
+    console.log("setting theme to", theme);
     setColorScheme(theme);
 
     (async () => {
@@ -104,7 +107,7 @@ export default function ThemeContextProvider({ children }) {
   }, [language]);
 
   return (
-    <ThemeContext.Provider
+    <AppContext.Provider
       value={{
         theme,
         setTheme,
@@ -116,6 +119,6 @@ export default function ThemeContextProvider({ children }) {
       }}
     >
       {children}
-    </ThemeContext.Provider>
+    </AppContext.Provider>
   );
 }

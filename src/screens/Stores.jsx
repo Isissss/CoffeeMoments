@@ -3,11 +3,16 @@ import { FlatList, SafeAreaView } from "react-native";
 import StoreItem from "../components/StoreItem";
 import DropDownPicker from "react-native-dropdown-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useTheme } from "../ThemeContext";
+import { useAppContext } from "../AppContext";
+import { View } from "react-native";
+import { Text } from "react-native";
+import { t } from "../I18n";
 
 export default function Stores({ navigation }) {
-  const { colorScheme, data } = useTheme();
+  const { colorScheme, data } = useAppContext();
   const [stores, setStores] = useState([]);
+  const { language } = useAppContext();
+
   const [favorites, setFavorites] = useState([]);
   const [shouldAnimate, setShouldAnimate] = useState(true);
   const [filter, setFilter] = useState("all"); // ["all", "favorites"]
@@ -38,26 +43,33 @@ export default function Stores({ navigation }) {
 
   return (
     <SafeAreaView className="flex-1">
-      <DropDownPicker
-        open={open}
-        // onOpen={() => setOpen2(false)}
-        value={filter}
-        style={{
-          backgroundColor: colorScheme == "dark" ? "#161A22" : "#fff",
-          borderColor: colorScheme == "dark" ? "#484E58" : "#9ca3af",
-        }}
-        dropDownContainerStyle={{
-          backgroundColor: colorScheme == "dark" ? "#161A22" : "#fff",
-          borderColor: colorScheme == "dark" ? "#484E58" : "#9ca3af",
-        }}
-        items={[
-          { label: "All", value: "all" },
-          { label: "Favorites", value: "favorites" },
-        ]}
-        setOpen={setOpen}
-        setValue={setFilter}
-        theme={colorScheme == "dark" ? "DARK" : "LIGHT"}
-      />
+      <View className="mx-2">
+        <DropDownPicker
+          open={open}
+          // onOpen={() => setOpen2(false)}
+          value={filter}
+          zIndex={5000}
+          style={{
+            backgroundColor: colorScheme == "dark" ? "#161A22" : "#fff",
+            borderColor: colorScheme == "dark" ? "#484E58" : "#9ca3af",
+          }}
+          dropDownContainerStyle={{
+            backgroundColor: colorScheme == "dark" ? "#161A22" : "#fff",
+            borderColor: colorScheme == "dark" ? "#484E58" : "#9ca3af",
+          }}
+          items={[
+            { label: "All", value: "all" },
+            { label: "Favorites", value: "favorites" },
+          ]}
+          setOpen={setOpen}
+          setValue={setFilter}
+          theme={colorScheme == "dark" ? "DARK" : "LIGHT"}
+        />
+      </View>
+      <Text className="text-black dark:text-white mx-2 my-4 text-2xl font-bold">
+        {t("stores.browseText", language)}
+      </Text>
+
       <FlatList
         ref={scrollRef}
         data={
@@ -65,16 +77,13 @@ export default function Stores({ navigation }) {
             ? data
             : data.filter((store) => favorites.includes(store.id))
         }
-        renderItem={({ item, index }) => (
-          <StoreItem
-            store={item}
-            navigation={navigation}
-            shouldAnimate={shouldAnimate}
-            index={index}
-          />
+        renderItem={({ item }) => (
+          <StoreItem store={item} navigation={navigation} />
         )}
-        keyExtractor={(item) => item.title}
-      />
+        keyExtractor={(item) => item.id}
+      >
+        <Text>dd</Text>
+      </FlatList>
     </SafeAreaView>
   );
 }

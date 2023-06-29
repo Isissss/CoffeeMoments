@@ -15,11 +15,11 @@ import * as Haptics from "expo-haptics";
 export default function FavoriteButton({ id, classes }) {
   const [favorite, setFavorite] = useState(false);
 
-  const rotation = useSharedValue(0);
+  const scale = useSharedValue(1);
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
-      transform: [{ rotateZ: `${rotation.value}deg` }],
+      transform: [{ scale: scale.value }],
     };
   });
 
@@ -89,6 +89,12 @@ export default function FavoriteButton({ id, classes }) {
       removeFavorite();
     } else {
       storeFavorite();
+
+      scale.value = withSequence(
+        withTiming(0.5, { duration: 0 }),
+        withTiming(1.25, { duration: 300 }),
+        withTiming(1, { duration: 200 })
+      );
     }
   };
 
@@ -101,12 +107,6 @@ export default function FavoriteButton({ id, classes }) {
     >
       <Pressable
         onPress={() => {
-          rotation.value = withSequence(
-            withTiming(-10, { duration: 100 }),
-            withRepeat(withTiming(10, { duration: 150 }), 2, true),
-            withTiming(0, { duration: 100 })
-          );
-
           toggleFavorite();
         }}
         className="py-2 active:bg-gray-300 w-14 h-14 rounded-full flex align-middle justify-center"
