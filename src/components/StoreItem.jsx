@@ -6,6 +6,7 @@ import { useAppContext } from "../AppContext";
 
 export default function StoreItem({ shouldAnimate, store, navigation, index }) {
 	const { colorScheme } = useAppContext();
+
 	if (!store) {
 		return <Text>Store not found</Text>;
 	}
@@ -27,8 +28,7 @@ export default function StoreItem({ shouldAnimate, store, navigation, index }) {
 			>
 				<View className="px-4 my-3 space-y-2 flex-row">
 					<Text className="flex-1 text-black dark:text-white">
-						{" "}
-						{store.title}{" "}
+						{store.title}
 					</Text>
 					<FontAwesome5
 						name="chevron-right"

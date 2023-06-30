@@ -7,32 +7,16 @@ import {
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Store from "./src/screens/Store";
-import { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useColorScheme } from "nativewind";
-
-import Home from "./src/Home";
 import AppContextProvider from "./src/AppContext";
 import NewMoment from "./src/components/NewMoment";
+import TabNavigation from "./src/TabNavigation";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
 	const { colorScheme } = useColorScheme();
-	const [stores, setStores] = useState([]);
-
-	const getMarkers = () => {
-		fetch("https://stud.hosted.hr.nl/1036029/PRG7/hotspots.json")
-			.then((response) => response.json())
-			.then((json) => {
-				setStores(json.hotspots);
-			})
-			.catch((error) => console.error(error));
-	};
-
-	useEffect(() => {
-		getMarkers();
-	}, []);
 
 	return (
 		<>
@@ -42,8 +26,8 @@ export default function App() {
 				>
 					<Stack.Navigator>
 						<Stack.Screen
-							name="Home"
-							component={Home}
+							name="TabNavigation"
+							component={TabNavigation}
 							options={{ headerShown: false }}
 						/>
 						<Stack.Screen
@@ -70,14 +54,6 @@ export default function App() {
 						/>
 
 						<Stack.Screen name="New Moment" component={NewMoment} />
-
-						{/* <Stack.Screen
-            name="MapStack" 
-            component={Map}
-            options={{ 
-              headerTitle: 'Map'
-            }}
-          /> */}
 					</Stack.Navigator>
 				</NavigationContainer>
 			</AppContextProvider>

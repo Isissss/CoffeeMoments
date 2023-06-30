@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { FlatList, SafeAreaView } from "react-native";
+import { FlatList, RefreshControl, SafeAreaView } from "react-native";
 import StoreItem from "../components/StoreItem";
 import DropDownPicker from "react-native-dropdown-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -11,15 +11,19 @@ import { Alert } from "react-native";
 import * as LocalAuthentication from "expo-local-authentication";
 
 export default function Stores({ navigation }) {
-	const { colorScheme, data } = useAppContext();
-	const [stores, setStores] = useState([]);
+	const { colorScheme, data, favorites, getData, connected } = useAppContext();
 	const { language } = useAppContext();
-
-	const [favorites, setFavorites] = useState([]);
+	const [refreshing, setRefreshing] = useState(false);
 	const [shouldAnimate, setShouldAnimate] = useState(true);
 	const [filter, setFilter] = useState("all"); // ["all", "favorites"]
 	const [open, setOpen] = useState(false);
 	const scrollRef = useRef(null);
+
+	useEffect(() => {
+		// set animate to false when filter changes, not the first time
+		if (shouldAnimate && filter === "all") return;
+		setShouldAnimate(false);
+	}, [filter]);
 
 	useEffect(() => {
 		// listen to tab touch event
@@ -34,23 +38,19 @@ export default function Stores({ navigation }) {
 		return unsubscribe;
 	}, [navigation]);
 
-	useEffect(() => {
-		// get favorites from storage
-		AsyncStorage.getItem("favorites").then((favorites) => {
-			if (favorites !== null) {
-				setFavorites(JSON.parse(favorites));
-			}
-		});
-	}, []);
+	const onRefresh = async () => {
+		setRefreshing(true);
+		await getData();
+		setRefreshing(false);
+	};
 
 	return (
 		<SafeAreaView className="flex-1">
-			<View className="mx-2">
+			<View className="mx-2 z-10">
 				<DropDownPicker
 					open={open}
 					// onOpen={() => setOpen2(false)}
 					value={filter}
-					zIndex={5000}
 					style={{
 						backgroundColor: colorScheme == "dark" ? "#161A22" : "#fff",
 						borderColor: colorScheme == "dark" ? "#484E58" : "#9ca3af",
@@ -60,19 +60,26 @@ export default function Stores({ navigation }) {
 						borderColor: colorScheme == "dark" ? "#484E58" : "#9ca3af",
 					}}
 					items={[
-						{ label: "All", value: "all" },
-						{ label: "Favorites", value: "favorites" },
+						{ label: t("dataFilter.all", language), value: "all" },
+						{ label: t("dataFilter.favorites", language), value: "favorites" },
 					]}
 					setOpen={setOpen}
 					setValue={setFilter}
 					theme={colorScheme == "dark" ? "DARK" : "LIGHT"}
 				/>
 			</View>
-			<Text className="text-black dark:text-white mx-2 my-4 text-2xl font-bold">
+			<Text className="text-black dark:text-white mx-2 my-4 text-2xl font-bold ">
 				{t("stores.browseText", language)}
 			</Text>
 
 			<FlatList
+				refreshControl={
+					<RefreshControl
+						refreshing={refreshing}
+						onRefresh={onRefresh}
+						enabled={false}
+					/>
+				}
 				ref={scrollRef}
 				data={
 					filter == "all"

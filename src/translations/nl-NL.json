@@ -4,21 +4,43 @@
         "languagePicker": "Kies een taal",
         "themePicker": "Kies een thema",
         "darkMode": "Donkere modus",
-        "lightMode": "Lichte modus"
+        "lightMode": "Lichte modus",
+        "system": "Systeem",
     },
     "hello": "Hallo!",
     "stores": {
         "title": "Winkels",
-        "browseText": "Blader door winkels",
-        "filter": {
-            "all": "Alle",
-            "favorites": "Favorieten"
-        }
+        "browseText": "Blader door koffiecafés"
     },
     "goToMap": "Ga naar kaart",
-    "feed": "Nieuwsfeed",
+    "feed": "Feed",
+    "map": "Kaart",
+    "dataFilter": {
+        "all": "Alle",
+        "favorites": "Favorieten"
+    },
     "noInternet": {
-        "title": "Geen internet!",
-        "message": "Verbind met internet om de kaart te bekijken."
+        "title": "Geen internetverbinding!",
+        "message": "Deze functie is uitgeschakeld zonder internetverbinding. Controleer uw verbinding en probeer het opnieuw."
+    },
+    "share": {
+        "message": "CoffeeMoments | Een platform om de beste koffie te vinden \n\nIk had onlangs een koffiemoment bij %{title}! Ik gaf het %{rating} sterren. Gaan we samen?"
+    },
+    "moments": {
+        "title": "Jouw koffiemomenten",
+        "unlock": "Ontgrendel om momenten te bekijken",
+        "addButton": "Voeg een moment toe",
+        "removeMoment": {
+            "title": "Moment verwijderen",
+            "message": "Weet je zeker dat je dit moment wilt verwijderen uit je momenten?",
+            "cancel": "Annuleren",
+            "confirm": "Verwijderen"
+        },
+        "addMoment": {
+            "title": "Upload je koffiemoment",
+            "placeholder": "Voer je recensie in",
+            "submit": "Koffiemoment toevoegen",
+            "pickImage": "Kies een afbeelding uit je fotogalerij"
+        }
     }
 }

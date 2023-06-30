@@ -1,19 +1,19 @@
-import { Text, Pressable, View } from "react-native";
+import { Pressable, View } from "react-native";
 import { useEffect, useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import Animated, {
 	useSharedValue,
 	useAnimatedStyle,
-	withRepeat,
 	withTiming,
 	withSequence,
 } from "react-native-reanimated";
 import { twJoin } from "tailwind-merge";
 import * as Haptics from "expo-haptics";
+import { useAppContext } from "../AppContext";
 
 export default function FavoriteButton({ id, classes }) {
 	const [favorite, setFavorite] = useState(false);
+	const { favorites, setFavorites } = useAppContext();
 
 	const scale = useSharedValue(1);
 
@@ -24,64 +24,25 @@ export default function FavoriteButton({ id, classes }) {
 	});
 
 	useEffect(() => {
-		checkFavorite();
-	}, []);
-
-	const removeFavorite = async () => {
-		try {
-			const favorites = await AsyncStorage.getItem("favorites");
-			if (favorites !== null) {
-				// value previously stored
-				await AsyncStorage.setItem(
-					"favorites",
-					JSON.stringify([
-						...JSON.parse(favorites).filter((item) => item !== id),
-					])
-				);
-				setFavorite(false);
-				Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-				Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-			}
-		} catch (e) {
-			console.log(e);
-			// saving error
+		if (favorites?.includes(id)) {
+			setFavorite(true);
+		} else {
+			setFavorite(false);
 		}
+	}, [favorites]);
+
+	const removeFavorite = () => {
+		setFavorites((prev) => prev.filter((item) => item !== id));
+		setFavorite(false);
+		Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 	};
 
 	const storeFavorite = async () => {
-		try {
-			const favorites = await AsyncStorage.getItem("favorites");
-			if (favorites !== null) {
-				// value previously stored
-				await AsyncStorage.setItem(
-					"favorites",
-					JSON.stringify([...JSON.parse(favorites), id])
-				);
-				setFavorite(true);
-				Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-				Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-			} else {
-				await AsyncStorage.setItem("favorites", JSON.stringify([id]));
-			}
-		} catch (e) {
-			console.log(e);
-			// saving error
-		}
-	};
-
-	const checkFavorite = async () => {
-		try {
-			const favorites = await AsyncStorage.getItem("favorites");
-			if (favorites !== null) {
-				// value previously stored
-				if (JSON.parse(favorites).includes(id)) {
-					setFavorite(true);
-				}
-			}
-		} catch (e) {
-			console.log(e);
-			// saving error
-		}
+		setFavorites((prev) => [...prev, id]);
+		setFavorite(true);
+		Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 	};
 
 	const toggleFavorite = async () => {

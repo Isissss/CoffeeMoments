@@ -9,6 +9,8 @@ import {
 	TouchableWithoutFeedback,
 	Keyboard,
 	Pressable,
+	Alert,
+	ActivityIndicator,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { storage } from "../../firebase";
@@ -18,24 +20,18 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { Ionicons } from "@expo/vector-icons";
 import { useAppContext } from "../AppContext";
 import { db } from "../../firebase";
+import { t } from "../I18n";
+import * as Haptics from "expo-haptics";
+
 function NewMoment({ store, close }) {
 	const [image, setImage] = useState(null);
-	const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
 	const [rating, onRatingChange] = useState(0);
 	const [textInputValue, onTextInputValueChange] = useState("");
-	const { moments, setMoments } = useAppContext();
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const { moments, setMoments, connected, language, colorScheme } =
+		useAppContext();
 
-	const handleImageUpload = () => {
-		// Implement image upload logic here
-		// You can use a library like Expo ImagePicker to handle image selection
-	};
-	useEffect(() => {
-		if (Platform.OS !== "web") {
-			requestPermission();
-		}
-	}, []);
-
-	async function uploadImageAsync(uri) {
+	async function uploadImageAsync(uri, fileName) {
 		// Why are we using XMLHttpRequest? See:
 		// https://github.com/expo/expo/issues/2402#issuecomment-443726662
 		const blob = await new Promise((resolve, reject) => {
@@ -53,7 +49,7 @@ function NewMoment({ store, close }) {
 		});
 
 		try {
-			const storageRef = ref(storage, `Images/image-${Date.now()} `);
+			const storageRef = ref(storage, fileName);
 			await uploadBytes(storageRef, blob);
 
 			blob.close();
@@ -66,9 +62,16 @@ function NewMoment({ store, close }) {
 		}
 	}
 	const pickImage = async () => {
-		if (!status.granted) {
-			return Alert.alert("Permission to access camera roll is required!");
+		if (!connected) {
+			Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+			Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+			Alert.alert(
+				t("noInternet.title", language),
+				t("noInternet.message", language)
+			);
+			return;
 		}
+
 		let result = await ImagePicker.launchImageLibraryAsync({
 			mediaTypes: ImagePicker.MediaTypeOptions.Images,
 			allowsEditing: true,
@@ -78,100 +81,83 @@ function NewMoment({ store, close }) {
 
 		if (!result.canceled) {
 			setImage(result.assets[0].uri);
-			// upload image to firebase
-			// const url = await uploadImageAsync(result.assets[0].uri);
-			// console.log(url);
 		}
 	};
 
 	const onSubmit = async () => {
-		// first upload image to firebase
-		var url = "";
+		setIsSubmitting(true);
 
-		if (image) {
-			url = await uploadImageAsync(image);
+		// check if all fields are filled
+		if (!textInputValue || !rating) {
+			Alert.alert("Error", "Please fill in all fields");
+			setIsSubmitting(false);
+			return;
 		}
 
-		// upload to firestore
-		const docRef = await addDoc(collection(db, "moments"), {
-			text: textInputValue,
-			rating: rating,
-			image: url,
-			store: store.id,
-			createdAt: Date.now(),
-		});
+		// first upload image to firebase storage
+		let url = "";
+		const fileName = `Images/image-${Date.now()}`;
+
+		if (image) {
+			url = await uploadImageAsync(image, fileName);
+			console.log(url);
+		}
 
 		// add to local storage, check if there is a key for this store.id
 		// if there is, add to the array, if not, create a new key
-		// and add the array with the first element
-		if (moments[store.id]) {
-			setMoments({
-				...moments,
-				[store.id]: [
-					...moments[store.id],
-					{
-						id: docRef.id,
-						text: textInputValue,
-						rating: rating,
-						image: url,
-						createdAt: Date.now(),
-					},
-				],
-			});
-		} else {
-			setMoments({
-				...moments,
-				[store.id]: [
-					{
-						id: docRef.id,
-						text: textInputValue,
-						rating: rating,
-						image: url,
-						createdAt: Date.now(),
-					},
-				],
-			});
-		}
+
+		const id = Date.now();
+
+		setMoments({
+			...moments,
+			[store.id]: [
+				...moments[store.id],
+				{
+					id: id,
+					text: textInputValue,
+					rating: rating,
+					image: url,
+					imageRef: fileName,
+					createdAt: Date.now(),
+				},
+			],
+		});
+
+		setIsSubmitting(false);
 		close();
 	};
 
 	return (
-		<KeyboardAvoidingView
-			behavior={Platform.OS === "ios" ? "padding" : "height"}
-			style={{
-				flex: 1,
-				alignItems: "center",
-				justifyContent: "center",
-				backgroundColor: "rgba(0,0,0,0.5)",
-			}}
-		>
+		<View className="flex-1 justify-center items-center bg-black/50">
 			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-				<View
-					className="w-[90%]"
-					style={{
-						opacity: 1,
-						backgroundColor: "white",
-						padding: 24,
-						borderRadius: 5,
-					}}
-				>
+				<View className="w-[90%] opacity-100 bg-white dark:bg-neutral-800 p-4 rounded-md">
 					<TouchableOpacity
 						onPress={close}
-						className="absolute top-0 right-0 p-2"
+						className="absolute top-0 right-0 p-2 z-10"
 					>
-						<Ionicons name="close" size={30} color="black" />
+						<Ionicons
+							name="close"
+							size={30}
+							color={colorScheme === "dark" ? "white" : "black"}
+						/>
 					</TouchableOpacity>
-					<Text className="text-xl font-bold">Upload your coffee moment</Text>
-					<TextInput
-						returnKeyType="done"
-						className="border border-gray-300 p-2 rounded-md mt-5 h-32"
-						multiline={true}
-						placeholder="Enter your review"
-						value={textInputValue}
-						blurOnSubmit={true}
-						onChangeText={onTextInputValueChange}
-					/>
-
+					<Text className="text-xl font-bold text-black dark:text-white">
+						{t("moments.addMoment.title", language)}
+					</Text>
+					<KeyboardAvoidingView
+						behavior={Platform.OS === "ios" ? "padding" : "height"}
+					>
+						<TextInput
+							placeholderTextColor={colorScheme === "dark" ? "white" : "black"}
+							returnKeyType="done"
+							className="border border-gray-300 text-black dark:text-white p-2 rounded-md mt-5 h-32"
+							multiline={true}
+							placeholder={t("moments.addMoment.placeholder", language)}
+							value={textInputValue}
+							blurOnSubmit={true}
+							onChangeText={onTextInputValueChange}
+						/>
+					</KeyboardAvoidingView>
 					<View style={{ flexDirection: "row", marginTop: 20 }}>
 						{[1, 2, 3, 4, 5].map((value) => (
 							<TouchableOpacity
@@ -188,14 +174,11 @@ function NewMoment({ store, close }) {
 						))}
 					</View>
 
-					<TouchableOpacity
-						onPress={handleImageUpload}
-						style={{ marginTop: 20 }}
-					>
-						<Ionicons name="camera" size={30} color="black" />
-					</TouchableOpacity>
-
-					<Button title="Pick an image from camera roll" onPress={pickImage} />
+					<Button
+						title={t("moments.addMoment.pickImage", language)}
+						onPress={pickImage}
+						color={connected ? "#CB9363" : "#c9c9c9"}
+					/>
 					{image && (
 						<Image
 							source={{ uri: image }}
@@ -205,12 +188,20 @@ function NewMoment({ store, close }) {
 					<Pressable
 						className="rounded-md mt-6 text-center py-4  bg-[#CB9363] active:bg-[#85542a] w-full"
 						onPress={() => onSubmit()}
+						disabled={isSubmitting}
 					>
-						<Text className="text-center text-white font-bold">Submit</Text>
+						{isSubmitting ? (
+							<ActivityIndicator color="white" />
+						) : (
+							<Text className="text-center text-white font-bold">
+								{" "}
+								{t("moments.addMoment.submit", language)}
+							</Text>
+						)}
 					</Pressable>
 				</View>
 			</TouchableWithoutFeedback>
-		</KeyboardAvoidingView>
+		</View>
 	);
 }
 

@@ -1,24 +1,46 @@
 {
     "settings": {
         "title": "Paramètres",
-        "languagePicker": "Choisissez une langue",
-        "themePicker": "Choisissez un thème",
+        "languagePicker": "Choisir une langue",
+        "themePicker": "Choisir un thème",
         "darkMode": "Mode sombre",
-        "lightMode": "Mode clair"
+        "lightMode": "Mode clair",
+        "system": "Système",
     },
     "hello": "Salut !",
     "stores": {
         "title": "Magasins",
-        "browseText": "Parcourir les magasins",
-        "filter": {
-            "all": "Tous",
-            "favorites": "Favoris"
-        }
+        "browseText": "Parcourir les cafés"
     },
     "goToMap": "Aller à la carte",
     "feed": "Flux",
+    "map": "Carte",
+    "dataFilter": {
+        "all": "Tous",
+        "favorites": "Favoris"
+    },
     "noInternet": {
         "title": "Pas de connexion Internet !",
-        "message": "Connectez-vous à Internet pour afficher la carte."
+        "message": "Cette fonctionnalité est désactivée sans connexion Internet. Veuillez vérifier votre connexion et réessayer."
+    },
+    "share": {
+        "message": "CoffeeMoments | Une plateforme pour trouver le meilleur café \n\nJ'ai récemment vécu un moment café chez %{title} ! Je lui ai attribué %{rating} étoiles. On y va ensemble ?"
+    },
+    "moments": {
+        "title": "Vos moments café",
+        "unlock": "Déverrouiller pour voir les moments",
+        "addButton": "Ajouter un moment",
+        "removeMoment": {
+            "title": "Supprimer le moment",
+            "message": "Êtes-vous sûr de vouloir supprimer ce moment de vos moments ?",
+            "cancel": "Annuler",
+            "confirm": "Supprimer"
+        },
+        "addMoment": {
+            "title": "Ajoutez votre moment café",
+            "placeholder": "Entrez votre avis",
+            "submit": "Ajouter le moment café",
+            "pickImage": "Choisir une image dans la galerie"
+        }
     }
 }

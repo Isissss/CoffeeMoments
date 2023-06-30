@@ -5,6 +5,8 @@ import {
 	ImageBackground,
 	Modal,
 	Pressable,
+	SafeAreaView,
+	ScrollView,
 	Text,
 	View,
 } from "react-native";
@@ -20,9 +22,8 @@ import { useAppContext } from "../AppContext";
 import * as Haptics from "expo-haptics";
 import * as LocalAuthentication from "expo-local-authentication";
 import NewMoment from "../components/NewMoment";
-import { db } from "../../firebase";
-import { collection, getDocs } from "firebase/firestore";
 import MomentCard from "../components/MomentCard";
+import { twJoin } from "tailwind-merge";
 
 export default function Store({ route, navigation }) {
 	const { store } = route.params;
@@ -37,15 +38,6 @@ export default function Store({ route, navigation }) {
 	const [modalVisible, setModalVisible] = useState(false);
 	const [currentMoments, setCurrentMoments] = useState([]);
 
-	useEffect(() => {
-		// duplicate 5 fake moments
-		const fakeMoments = [...Array(5)].map((_, i) => {
-			return { ...moments[store.id], id: i };
-		});
-
-		setCurrentMoments(fakeMoments);
-	}, []);
-
 	const onMapPress = () => {
 		if (connected) {
 			navigation.navigate("Map", { store });
@@ -58,6 +50,10 @@ export default function Store({ route, navigation }) {
 			);
 		}
 	};
+
+	useEffect(() => {
+		setCurrentMoments(moments[store.id] || []);
+	}, [moments]);
 
 	const authenticateUser = async () => {
 		// check if hardware is available
@@ -75,6 +71,7 @@ export default function Store({ route, navigation }) {
 	};
 
 	const handleMomentPress = async () => {
+		// check if user is authenticated, if not, authenticate
 		if (!authenticated) {
 			const result = await authenticateUser();
 
@@ -82,12 +79,14 @@ export default function Store({ route, navigation }) {
 				return Alert.alert("Authentication failed");
 			}
 		}
+	};
 
+	const addMoment = () => {
 		setModalVisible(true);
 	};
 
 	return (
-		<View className="relative flex-1 ">
+		<ScrollView className="relative flex-1 bg-neutral-100   dark:bg-[#232323]">
 			<Modal
 				animationType="slide"
 				transparent={true}
@@ -102,15 +101,13 @@ export default function Store({ route, navigation }) {
 					close={() => setModalVisible(false)}
 				/>
 			</Modal>
-			{/* <Animated.Image
-        className="object-cover w-full h-64"
-        source={require("./assets/starb.jpg")}
-        sharedTransitionTag={`photo-${store.id}`}
-      /> */}
+
 			<ImageBackground
 				sharedTransitionTag={store.id}
 				className="object-cover w-full h-64"
-				source={require("../../assets/starb.jpg")}
+				source={
+					store.image ? { uri: store.image } : require("../../assets/starb.jpg")
+				}
 			>
 				<LinearGradient
 					colors={["transparent", "rgba(0,0,0,0.8)"]}
@@ -118,7 +115,7 @@ export default function Store({ route, navigation }) {
 				></LinearGradient>
 			</ImageBackground>
 
-			<View className="absolute top-52 p-6 bg-neutral-100 dark:bg-[#232323] h-full w-full rounded-t-[30px]">
+			<View className="-top-6 p-6 rounded-t-[30px]  bg-neutral-100   dark:bg-[#232323]">
 				<FavoriteButton id={store.id} classes="-top-5 z-30 right-10 absolute" />
 				<Animated.Text
 					entering={FadeInDown.duration(400).delay(150)}
@@ -137,24 +134,23 @@ export default function Store({ route, navigation }) {
 					</Text>
 
 					<Text className="text-black dark:text-white my-5 ">
-						{store.description}
+						{store.description[language] || store.description["en"]}
 					</Text>
 
 					<Pressable onPress={onMapPress} className="flex-row">
-						<View className="rounded-md flex-row justify-center items-center bg-[#f1cba9] border-[#e8b990] dark:border-[#91735a] border-2 dark:bg-[#603813] p-3">
-							<Ionicons
-								name="map"
-								size={20}
-								color={colorScheme === "dark" ? "white" : "black"}
-							/>
-							<Text className=" text-black dark:text-white">
-								{t("goToMap", language)}
-							</Text>
+						<View
+							className={twJoin(
+								"rounded-md flex-row justify-center items-centeractive:opacity-80 p-2",
+								connected ? " bg-[#603813] " : "bg-gray-400"
+							)}
+						>
+							<Ionicons name="map" size={20} color={"white"} />
+							<Text className="text-white ml-2">{t("goToMap", language)}</Text>
 						</View>
 					</Pressable>
 
 					<Text className="text-xl  mt-10 font-bold text-black dark:text-white">
-						Your Coffee Moments:
+						{t("moments.title", language)} ({currentMoments.length}):
 					</Text>
 					{!authenticated ? (
 						<Pressable
@@ -166,29 +162,36 @@ export default function Store({ route, navigation }) {
 								size={24}
 								color={colorScheme === "dark" ? "white" : "black"}
 							/>
-							<Text className="text-center rounded-md  text-black dark:text-white px-4 mt-3">
-								Unlock to view moments
+							<Text className="text-center rounded-md text-black dark:text-white px-4 mt-3">
+								{t("moments.unlock", language)}
 							</Text>
 						</Pressable>
 					) : (
 						<>
-							<Pressable onPress={() => handleMomentPress()}>
-								<Text className="text-center rounded-md  text-black dark:text-white px-4 mt-3">
-									Add a moment
+							<Pressable
+								className="rounded-md my-2 text-center py-3 bg-[#CB9363] active:bg-[#85542a]"
+								onPress={() => addMoment()}
+							>
+								<Text className="text-center text-white font-bold">
+									{t("moments.addButton", language)}
 								</Text>
 							</Pressable>
 							<FlatList
 								data={currentMoments}
 								horizontal={true}
-								showsHorizontalScrollIndicator={false}
-								renderItem={({ item }) => (
-									<MomentCard moment={item} navigation={navigation} />
+								renderItem={({ item, index }) => (
+									<MomentCard
+										moment={item}
+										store={store}
+										navigation={navigation}
+										index={index}
+									/>
 								)}
 							/>
 						</>
 					)}
 				</Animated.View>
 			</View>
-		</View>
+		</ScrollView>
 	);
 }

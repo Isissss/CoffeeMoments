@@ -3,22 +3,44 @@
         "title": "设置",
         "languagePicker": "选择语言",
         "themePicker": "选择主题",
-        "darkMode": "暗模式",
-        "lightMode": "亮模式"
+        "darkMode": "深色模式",
+        "lightMode": "浅色模式",
+        "system": "系统",
     },
     "hello": "你好！",
     "stores": {
         "title": "商店",
-        "browseText": "浏览商店",
-        "filter": {
-            "all": "全部",
-            "favorites": "收藏"
-        }
+        "browseText": "浏览咖啡店"
     },
     "goToMap": "前往地图",
     "feed": "动态",
+    "map": "地图",
+    "dataFilter": {
+        "all": "全部",
+        "favorites": "收藏"
+    },
     "noInternet": {
         "title": "无网络连接！",
-        "message": "连接到互联网以查看地图。"
+        "message": "此功能在没有网络连接时无法使用。请检查您的连接并重试。"
+    },
+    "share": {
+        "message": "CoffeeMoments | 找到最好的咖啡的平台 \n\n我最近在%{title}享受了一次咖啡时刻！我给它评了%{rating}颗星。我们一起去吧？"
+    },
+    "moments": {
+        "title": "你的咖啡时刻",
+        "unlock": "解锁查看时刻",
+        "addButton": "添加一个时刻",
+        "removeMoment": {
+            "title": "移除时刻",
+            "message": "你确定要将此时刻从你的时刻中移除吗？",
+            "cancel": "取消",
+            "confirm": "移除"
+        },
+        "addMoment": {
+            "title": "上传你的咖啡时刻",
+            "placeholder": "输入你的评论",
+            "submit": "添加咖啡时刻",
+            "pickImage": "从相册选择一张图片"
+        }
     }
 }

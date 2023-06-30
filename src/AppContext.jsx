@@ -16,6 +16,7 @@ export default function AppContextProvider({ children }) {
 	const [data, setData] = useState([]);
 	const [authenticated, setAuthenticated] = useState(false);
 	const [moments, setMoments] = useState(null);
+	const [favorites, setFavorites] = useState(null);
 
 	useEffect(() => {
 		(async () => {
@@ -38,41 +39,54 @@ export default function AppContextProvider({ children }) {
 				setLanguage(language.getLocales()[0].languageCode || "en");
 			}
 
-			// get data from storage
-			const networkInfo = await NetInfo.fetch();
-			if (networkInfo.isConnected) {
-				try {
-					const response = await fetch(
-						"https://stud.hosted.hr.nl/1036029/PRG7/hotspots.json"
-					);
-					const json = await response.json();
-					await AsyncStorage.setItem("data", JSON.stringify(json.hotspots));
-					setData(json.hotspots);
-				} catch (e) {
-					// attempt to get data from storage
-					getDataFromStorage();
-				}
-			} else {
-				setConnected(false);
-				getDataFromStorage();
-			}
+			getData();
 
 			// get moments from storage
 			const savedMoments = await AsyncStorage.getItem("moments");
-			console.log(savedMoments);
 			if (savedMoments !== null) {
 				setMoments(JSON.parse(savedMoments));
 			} else {
 				setMoments([]);
 			}
+
+			// get favorites from storage
+			const savedFavorites = await AsyncStorage.getItem("favorites");
+			if (savedFavorites !== null) {
+				setFavorites(JSON.parse(savedFavorites));
+			} else {
+				setFavorites([]);
+			}
 		})();
 
-		const disconnect = NetInfo.addEventListener((state) => {
-			setConnected(state.isConnected);
-		});
+		// const disconnect = NetInfo.addEventListener((state) => {
+		// 	setConnected(state.isConnected);
+		// });
 
-		return disconnect;
+		// return disconnect;
 	}, []);
+
+	const getData = async () => {
+		// get data from storage
+		const networkInfo = await NetInfo.fetch();
+		if (networkInfo.isConnected) {
+			try {
+				const response = await fetch(
+					"https://stud.hosted.hr.nl/1036029/PRG7/hotspots2.json"
+				);
+				const data = await response.json();
+				setData(data.hotspots);
+				await AsyncStorage.setItem("data", JSON.stringify(data.hotspots));
+				setConnected(true);
+			} catch (e) {
+				// attempt to get data from storage
+				getDataFromStorage();
+				console.log(e);
+			}
+		} else {
+			setConnected(false);
+			getDataFromStorage();
+		}
+	};
 
 	const getDataFromStorage = async () => {
 		const savedData = await AsyncStorage.getItem("data");
@@ -89,7 +103,18 @@ export default function AppContextProvider({ children }) {
 	};
 
 	useEffect(() => {
-		console.log("setting theme to", theme);
+		if (!favorites) return;
+
+		(async () => {
+			try {
+				await AsyncStorage.setItem("favorites", JSON.stringify(favorites));
+			} catch (e) {
+				console.log(e);
+			}
+		})();
+	}, [favorites]);
+
+	useEffect(() => {
 		setColorScheme(theme);
 
 		(async () => {
@@ -143,6 +168,9 @@ export default function AppContextProvider({ children }) {
 				setAuthenticated,
 				moments,
 				setMoments,
+				favorites,
+				setFavorites,
+				getData,
 			}}
 		>
 			{children}

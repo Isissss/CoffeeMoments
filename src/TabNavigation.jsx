@@ -13,11 +13,10 @@ import NewMoment from "./components/NewMoment";
 
 const Tab = createBottomTabNavigator();
 
-export default function Home() {
+export default function TabNavigation() {
 	const { language, colorScheme, connected } = useAppContext();
 
 	return (
-		// receive dispatch from parent
 		<Tab.Navigator
 			screenOptions={{
 				tabBarActiveTintColor: colorScheme === "dark" ? "#FF2D55" : "#FF375F",
@@ -37,7 +36,7 @@ export default function Home() {
 				}}
 			/>
 			<Tab.Screen
-				name="Map"
+				name={t("map", language)}
 				options={{
 					tabBarIcon: ({ color }) => (
 						<MaterialIcons
@@ -50,6 +49,7 @@ export default function Home() {
 				listeners={() => ({
 					tabPress: (e) => {
 						if (!connected) {
+							// send error alert if not connected
 							e.preventDefault();
 							Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
 							Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -63,17 +63,6 @@ export default function Home() {
 			>
 				{(props) => <Map {...props} />}
 			</Tab.Screen>
-			{/* <Tab.Screen
-				name="Feed"
-				component={Counter}
-				options={{
-					tabBarIcon: ({ color }) => (
-						<MaterialIcons name="favorite-outline" color={color} size={26} />
-					),
-					title: t("feed", language),
-					tabBarLabel: t("feed", language),
-				}}
-			/> */}
 			<Tab.Screen
 				name="Settings"
 				component={Settings}

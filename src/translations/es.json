@@ -1,24 +1,46 @@
 {
     "settings": {
         "title": "Configuración",
-        "languagePicker": "Selecciona un idioma",
-        "themePicker": "Selecciona un tema",
+        "languagePicker": "Seleccionar un idioma",
+        "themePicker": "Seleccionar un tema",
         "darkMode": "Modo oscuro",
-        "lightMode": "Modo claro"
+        "lightMode": "Modo claro",
+        "system": "Sistema",
     },
     "hello": "¡Hola!",
     "stores": {
         "title": "Tiendas",
-        "browseText": "Explorar tiendas",
-        "filter": {
-            "all": "Todas",
-            "favorites": "Favoritas"
-        }
+        "browseText": "Explorar cafeterías"
     },
     "goToMap": "Ir al mapa",
     "feed": "Feed",
+    "map": "Mapa",
+    "dataFilter": {
+        "all": "Todos",
+        "favorites": "Favoritos"
+    },
     "noInternet": {
         "title": "¡Sin conexión a internet!",
-        "message": "Conéctate a internet para ver el mapa."
+        "message": "Esta función está desactivada sin conexión a internet. Por favor, verifica tu conexión e intenta nuevamente."
+    },
+    "share": {
+        "message": "CoffeeMoments | Una plataforma para encontrar el mejor café \n\n¡Recientemente tuve un momento de café en %{title}! Lo califiqué con %{rating} estrellas. ¿Vamos juntos?"
+    },
+    "moments": {
+        "title": "Tus momentos de café",
+        "unlock": "Desbloquear para ver momentos",
+        "addButton": "Agregar un momento",
+        "removeMoment": {
+            "title": "Eliminar momento",
+            "message": "¿Estás seguro de que deseas eliminar este momento de tus momentos?",
+            "cancel": "Cancelar",
+            "confirm": "Eliminar"
+        },
+        "addMoment": {
+            "title": "Sube tu momento de café",
+            "placeholder": "Ingresa tu reseña",
+            "submit": "Agregar momento de café",
+            "pickImage": "Seleccionar una imagen de la galería"
+        }
     }
 }

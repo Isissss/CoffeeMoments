@@ -22,13 +22,13 @@ i18n.availableLocales = [
 	{ code: "fr-FR", languageString: "Francais" },
 	{ code: "es-ES", languageString: "Espanol" },
 	{ code: "nl-NL", languageString: "Nederlands" },
-	{ code: "zh-ch", languageString: "中文" },
+	{ code: "zh-CH", languageString: "中文" },
 	{ code: "de-DE", languageString: "Deutsch" },
 ];
 
-export const t = (key, language) => {
+export const t = (key, language, options) => {
 	i18n.locale = language;
-	return i18n.t(key);
+	return i18n.t(key, options);
 };
 
 export default i18n;

@@ -4,21 +4,43 @@
         "languagePicker": "Pick a language",
         "themePicker": "Pick a theme",
         "darkMode": "Dark mode",
-        "lightMode": "Light mode"
+        "lightMode": "Light mode",
+        "system": "System",
     },
     "hello": "Hi!",
     "stores": {
         "title": "Stores",
-        "browseText": "Browse stores",
-        "filter": {
-            "all": "All",
-            "favorites": "Favorites"
-        }
+        "browseText": "Browse Coffee Caffes"
     },
     "goToMap": "Go to map",
     "feed": "Feed",
+    "map": "Map",
+    "dataFilter": {
+        "all": "All",
+        "favorites": "Favorites"
+    },
     "noInternet": {
         "title": "No internet!",
-        "message": "You are not connected to the internet. Please check your connection and try again."
+        "message": "This feature is disabled without internet. Please check your connection and try again."
+    },
+    "share": {
+        "message": "CoffeeMoments | A platform to find the best coffee \n\nI recently had a coffee moment at %{title}! I rated it %{rating} stars. Shall we go together?"
+    },
+    "moments": {
+        "title": "Your Coffee Moments",
+        "unlock": "Unlock to view moments",
+        "addButton": "Add a moment",
+        "removeMoment": {
+            "title": "Remove Moment",
+            "message": "Are you sure you want to remove this Moment from your Moments?",
+            "cancel": "Cancel",
+            "confirm": "Remove"
+        },
+        "addMoment": {
+            "title": "Upload your Coffee Moment",
+            "placeholder": "Enter your review",
+            "submit": "Add Coffee Moment",
+            "pickImage": "Pick an image from camera roll",
+        }
     }
 }

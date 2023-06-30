@@ -4,21 +4,43 @@
         "languagePicker": "Sprache auswählen",
         "themePicker": "Design auswählen",
         "darkMode": "Dunkler Modus",
-        "lightMode": "Heller Modus"
+        "lightMode": "Heller Modus",
+        "system": "System",
     },
     "hello": "Hallo!",
     "stores": {
         "title": "Geschäfte",
-        "browseText": "Geschäfte durchsuchen",
-        "filter": {
-            "all": "Alle",
-            "favorites": "Favoriten"
-        }
+        "browseText": "Durchsuche Kaffee-Cafés"
     },
     "goToMap": "Zur Karte gehen",
     "feed": "Feed",
+    "map": "Karte",
+    "dataFilter": {
+        "all": "Alle",
+        "favorites": "Favoriten"
+    },
     "noInternet": {
         "title": "Kein Internet!",
-        "message": "Verbinden Sie sich mit dem Internet, um die Karte anzuzeigen."
+        "message": "Diese Funktion ist ohne Internet deaktiviert. Bitte überprüfen Sie Ihre Verbindung und versuchen Sie es erneut."
+    },
+    "share": {
+        "message": "CoffeeMoments | Eine Plattform, um den besten Kaffee zu finden \n\nIch hatte kürzlich einen Kaffee-Moment bei %{title}! Ich habe es mit %{rating} Sternen bewertet. Wollen wir gemeinsam gehen?"
+    },
+    "moments": {
+        "title": "Deine Kaffee-Momente",
+        "unlock": "Freischalten, um Momente anzuzeigen",
+        "addButton": "Einen Moment hinzufügen",
+        "removeMoment": {
+            "title": "Moment entfernen",
+            "message": "Möchtest du diesen Moment wirklich aus deinen Momenten entfernen?",
+            "cancel": "Abbrechen",
+            "confirm": "Entfernen"
+        },
+        "addMoment": {
+            "title": "Lade deinen Kaffee-Moment hoch",
+            "placeholder": "Gib deine Bewertung ein",
+            "submit": "Kaffee-Moment hinzufügen",
+            "pickImage": "Wähle ein Bild aus der Kamerarolle"
+        }
     }
 }
