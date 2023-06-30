@@ -36,8 +36,10 @@ export default function TabNavigation() {
 				}}
 			/>
 			<Tab.Screen
-				name={t("map", language)}
+				name="Map"
 				options={{
+					title: t("map", language),
+					tabBarLabel: t("map", language),
 					tabBarIcon: ({ color }) => (
 						<MaterialIcons
 							name="map"

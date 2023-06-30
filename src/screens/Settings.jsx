@@ -91,7 +91,8 @@ export default function Settings({ navigation }) {
 					onPress={() => setTheme("system")}
 				>
 					<Text className="flex-1 text-neutral-800 dark:text-neutral-200">
-						<MaterialCommunityIcons name="circle-half-full" size={16} /> System
+						<MaterialCommunityIcons name="circle-half-full" size={16} />{" "}
+						{t("settings.system", language)}
 					</Text>
 					{theme == "system" ? (
 						<FontAwesome5 name="dot-circle" size={18} color={bestColor} />

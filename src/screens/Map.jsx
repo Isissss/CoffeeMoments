@@ -9,7 +9,7 @@ import { useAppContext } from "../AppContext";
 
 export default function Map({ route, navigation }) {
 	const mapRef = useRef(null);
-	const { data, colorScheme } = useAppContext();
+	const { data, colorScheme, language } = useAppContext();
 	const [location, setLocation] = useState(null);
 
 	// set main region
@@ -119,7 +119,9 @@ export default function Map({ route, navigation }) {
 							longitude: marker.longitude,
 						}}
 						title={marker.title}
-						description={marker.description}
+						description={
+							marker.description[language] || marker.description["en"]
+						}
 					/>
 				))}
 			</MapView>
